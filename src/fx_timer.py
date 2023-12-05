@@ -32,6 +32,7 @@ class FxTimer():
     __last_time = 0
     __expiration_time = 1000
     __callbackExpiration = None
+    __expired = False
 
     def update(self):
         self.__now = time.time()
