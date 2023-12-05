@@ -1,4 +1,4 @@
-'''
+"""
 
 MIT License
 
@@ -22,9 +22,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-'''
-
-import time
+"""
 
 from machine import Pin, SoftI2C
 
@@ -163,7 +161,8 @@ class Made4Home:
         """Constructor
         """        
 
-        self.setup()
+        # self.setup()
+        pass
 
     def setup(self):
         """Setup the IO board.
@@ -176,8 +175,8 @@ class Made4Home:
         self.__TWIOne.start()
         # Set inputs and outputs.
         # Command 0x00 F last four outputs and 0 for first four to be inputs.
-        self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b'\x00\x0F')
-        # self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b'\x09\x01')
+        self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b"\x00\x0F")
+        # self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b"\x09\x01")
         # Stop the communication.
         self.__TWIOne.stop()
 
