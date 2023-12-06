@@ -24,9 +24,11 @@ SOFTWARE.
 
 """
 
+from neopixel import NeoPixel
+
 from machine import Pin, SoftI2C
 
-from neopixel import NeoPixel
+from mcp23008 import MCP23008
 
 
 PIN_LEDs = 16
@@ -153,7 +155,7 @@ class Made4Home:
     """Two Wire Interface with index 0.
     """
 
-    # Adafruit_MCP23008 *m_MCP;
+    __MCP = None
     """MCP IO chip abstraction instance.
     """
 
@@ -169,16 +171,20 @@ class Made4Home:
         """
 
         self.__LEDs = NeoPixel(Pin(PIN_LEDs), LED_COUNT)
-        self.__TWIOne = SoftI2C(scl=Pin(PIN_SCL_1), sda=Pin(PIN_SDA_1), freq=100000)
+        self.__LEDs[0] = (0,0,0)
+        self.__LEDs[1] = (0,0,0)
+        self.__LEDs.write()
 
-        # Start the communication.
-        self.__TWIOne.start()
-        # Set inputs and outputs.
-        # Command 0x00 F last four outputs and 0 for first four to be inputs.
-        self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b"\x00\x0F")
-        # self.__TWIOne.writeto(IO_EXPANDER_ADDRESS, b"\x09\x01")
-        # Stop the communication.
-        self.__TWIOne.stop()
+        self.__TWIOne = SoftI2C(scl=Pin(PIN_SCL_1), sda=Pin(PIN_SDA_1), freq=100000)
+        self.__MCP = MCP23008(self.__TWIOne, IO_EXPANDER_ADDRESS)
+        self.__MCP.setPinDir(PIN_RELAY_1, 0)
+        self.__MCP.setPinDir(PIN_RELAY_2, 0)
+        self.__MCP.setPinDir(PIN_RELAY_3, 0)
+        self.__MCP.setPinDir(PIN_RELAY_4, 0)
+        self.__MCP.setPinDir(PIN_IN_1, 1)
+        self.__MCP.setPinDir(PIN_IN_2, 1)
+        self.__MCP.setPinDir(PIN_IN_3, 1)
+        self.__MCP.setPinDir(PIN_IN_4, 1)
 
     def setLED(index, r, g, b):
         """Set the color of the LEDs.
@@ -217,7 +223,7 @@ class Made4Home:
         self.__LEDs[1] = (r, g, b)
         self.__LEDs.write()
 
-    def digitalRead(pin):
+    def digitalRead(self, pin):
         """Read the digital inputs of the IO board.
 
         Args:
@@ -225,13 +231,18 @@ class Made4Home:
         """
         pass
 
-    def digitalWrite(pin, state):
+    def digitalWrite(self, pin, state):
         """Write to the relay outputs of the IO board.
 
         Args:
             pin (int): Pin number [PIN_RELAY_1 .. 4]
             state (int): HIGH or LOW
         """
-        pass
+
+        if state == 1:
+            self.__MCP.setPinHigh(pin)
+
+        if state == 0:
+            self.__MCP.setPinLow(pin)
 
 m4h = Made4Home()
