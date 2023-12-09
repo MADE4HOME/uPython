@@ -229,7 +229,11 @@ class Made4Home:
         Args:
             pin (int): Pin number [PIN_IN_1 .. 4]
         """
-        pass
+        
+        if pin > PIN_IN_1 or pin < PIN_IN_4:
+            return 0
+
+        return self.__MCP.readPin(pin)
 
     def digitalWrite(self, pin, state):
         """Write to the relay outputs of the IO board.
@@ -238,6 +242,9 @@ class Made4Home:
             pin (int): Pin number [PIN_RELAY_1 .. 4]
             state (int): HIGH or LOW
         """
+
+        if pin < PIN_RELAY_1 or pin > PIN_RELAY_4:
+            return
 
         if state == 1:
             self.__MCP.setPinHigh(pin)
