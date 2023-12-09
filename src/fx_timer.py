@@ -37,8 +37,8 @@ class FxTimer():
     def update(self):
         self.__now = time.time()
         if (self.__now - self.__last_time) >= self.__expiration_time:
-            if m_expired == False:
-                m_expired = True
+            if self.__expired == False:
+                self.__expired = True
             if self.__callbackExpiration != None:
                 self.__callbackExpiration(self.__now)
 
@@ -46,9 +46,9 @@ class FxTimer():
         self.__last_time = time.time()
 
     def clear(self):
-        if m_expired == True:
-            m_expired = False
-	
+        if self.__expired == True:
+            self.__expired = False
+
     def setExpirationCb(self, callback):
         self.__callbackExpiration = callback
 
