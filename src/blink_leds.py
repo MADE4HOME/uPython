@@ -2,7 +2,7 @@
 from fx_timer import FxTimer
 from made4home import m4h
 
-update_interval = 500
+update_interval = 1
 
 update_timer = FxTimer()
 
@@ -16,11 +16,13 @@ def setup():
     m4h.setup()
 
 def loop():
+    global state, update_timer
+
     update_timer.update()
     if update_timer.expired():
         update_timer.updateLastTime()
         update_timer.clear()
-
+        
         # set the LED with the state of the variable:
         if state == 0:
             m4h.setL1(0, 0, 0)
